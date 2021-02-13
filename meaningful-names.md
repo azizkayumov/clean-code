@@ -53,3 +53,78 @@ if (O == l)
 else
     l = O1;
 ```
+### Make Meaningful Distinctions
+Do not just write code to satisfy a compiler or interpreter. If names must be different, then they would also mean something different. 
+Number-series names are not *disinformative*, but they are *noninformative*, and provide no clue to the author's intention:
+```
+public static void copyChars(char a1[], char a2[])
+```
+Much better:
+```
+public static void copyChars(char source[], char destination[])
+```
+Noise words are another meaningless distinction:   
+Names | Reason
+------------ | -------------
+`Product`, `ProductInfo`, `ProductData` | No difference in meaning
+`int variable` | Avoid programming keywords
+`Name`, `NameString` | Do not add the data type if it is obvious 
+`Customer`, `CustomerObject` | Which one will represent the best path to a customer's payment history?
+`getActiveAccount()`, `getActiveAccounts()`, `getActiveAccountInfo()` | Which function should I call?
+
+Distinguish names in such a way that the reader knows what the differences offer.
+
+### Use Pronounceable Names
+Programming is a social activity, you got to discuss your code with others -> so avoid using unpronounceable names at all costs:
+```
+class DtaRcrd102{
+    private Date genymdhms;  // generation date, year, month, day, hour, minute, second
+    private Date modymdhms;  // modification date, year, month, day, hour, minute, second
+    ...
+}
+```
+Compare:
+```
+class Customer{
+    private Date generationTimestamp;
+    private Date modificationTimestamp; 
+    ...
+}      
+```
+### Use Searchable Names 
+Single-letter names and numeric constants are not easy to locate across a body of text.
+If a variable or constant might be seen or used in multiple places in a body of code, it is imperative to give it a search-friendly name.    
+Compare:
+```
+for (int j=0; j<34; j++)
+    s += (t[j]*4) / 5
+```
+to:
+```
+int realDaysPerIdealDay = 4;
+const int WORK_DAYS_PER_WEEK = 5;
+int sum = 0;
+for (int j=0; j<NUMBER_OF_TASKS; j++){
+    int realTaskDays = taskEstimate[j] * realDaysPerIdealDay;
+    int realTaskWeeks = (realTaskDays / WORK_DAYS_PER_WEEK);
+    sum += realTaskWeeks
+}
+```
+Notice how much easier it will be to find `WORK_DAYS_PER_WEEK` than to find all the places where 5 was used.
+### Member Prefixes
+You don't need to prefix member variables with `m_` anymore:
+```
+public class Part{
+    String m_dsc; // textual description
+} 
+```
+People quickly learn to ignore the prefixes to see the meaningful part of the name:
+```
+public class Part{
+    String description; // textual description
+} 
+```
+### Interfaces & Implementations
+Avoid adding `I` to interface names: `IShapeFactory` -> `ShapeFactory`. You don't have to let users know that you're handing them an interface (where they can quickly find out that it is an interface in modern IDEs).
+Encode the implementation (not the interface): `ShapeFactoryImpl` or `CShapeFactory`.
+
