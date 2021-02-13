@@ -1,3 +1,5 @@
+**The only valid measurement of code quality: WTFs / minute.**
+
 ### Bad code
 As Uncle Bob wrote:
 > It was the bad code that
