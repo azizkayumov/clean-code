@@ -53,6 +53,7 @@ if (O == l)
 else
     l = O1;
 ```
+
 ### Make Meaningful Distinctions
 Do not just write code to satisfy a compiler or interpreter. If names must be different, then they would also mean something different. 
 Number-series names are not *disinformative*, but they are *noninformative*, and provide no clue to the author's intention:
@@ -91,6 +92,7 @@ class Customer{
     ...
 }      
 ```
+
 ### Use Searchable Names 
 Single-letter names and numeric constants are not easy to locate across a body of text.
 If a variable or constant might be seen or used in multiple places in a body of code, it is imperative to give it a search-friendly name.    
@@ -111,6 +113,7 @@ for (int j=0; j<NUMBER_OF_TASKS; j++){
 }
 ```
 Notice how much easier it will be to find `WORK_DAYS_PER_WEEK` than to find all the places where 5 was used.
+
 ### Member Prefixes
 You don't need to prefix member variables with `m_` anymore:
 ```
@@ -124,7 +127,67 @@ public class Part{
     String description; // textual description
 } 
 ```
+
 ### Interfaces & Implementations
 Avoid adding `I` to interface names: `IShapeFactory` -> `ShapeFactory`. You don't have to let users know that you're handing them an interface (where they can quickly find out that it is an interface in modern IDEs).
-Encode the implementation (not the interface): `ShapeFactoryImpl` or `CShapeFactory`.
+Encode the implementation (not the interface): `ShapeFactoryImpl` or `CShapeFactory`.    
 
+### Avoid Mental Mapping
+Readers should not have to mentally translate your names into other names they already know.
+A single letter name (other than `i`,`j`,`k` for loops) is a poor choice. 
+The difference between a smart programmer and a professional programmer is that the professional understands that *clarity is king* and write code that others can understand.
+
+### Class Names
+Classes and objects should have **noun** or **noun phrase** names: `Customer`, `WikiPage`, `Account`. Avoid general words like `Manager`, `Info`, `Data`. A class name should not be a verb.
+
+### Method Names
+Method names should have **verb** or **verb phrase** like `postPayment`, `deletePage`, `save`. Use the JavaBeans prefixes:
+`set`, `is`, `get`, `add` and `remove` for accessors, mutators and predicates:
+```
+string name = employee.getName();
+customer.setName("mike");
+if (paycheck.isPosted()) ...
+```
+When constructors are overloaded, consider enforcing static factory methods with names that describe the arguments:
+```
+Complex fulcrumPoint = new Complex(23.0); // bad code
+Complex fulcrumPoint = Complex.FromRealNumber(23.0); // better
+```
+
+### Don't Be Cute
+Cute names are only memorable to those who share the same joke with you. Who knows what the function named `HolyHandGrenade` is supposed to do? Simply `DeleteItems` might be a better name. Do not use slangs: `whack()` -> `kill()`, do not tell culture dependent jokes: `eatMyShorts()` -> `abort()`. 
+
+### Pick One Word per Concept
+Pick one word for one abstract concept and stick with it: `fetch`, `retrieve`, `get`.
+What's the essential difference between `DeviceManager` and `ProtocolController`? Why are both not `controllers` or `managers`? A consistent naming is a great time-saver to the programmers who must use your code.
+
+### Don't Pun
+Do not overuse **One Word per Concept**. Suppose we're using `add` for methods that concatenate two items and make a new object. Now, we're writing a new class that puts an element into a collection. Should we call this `add`? Use names like `insert` or `append`.    
+Our goal is to make our code as easy as possible to understand, not an intense study. 
+
+### Use Solution Domain Names
+The people who read your code will be programmers, so use computer science terms, algorithm names, pattern names, math terms. `HomePresenter` is a great deal with someone who already knows the presenter pattern.
+
+### Use Problem Domain Names
+When there is no solution domain name, use the problem specific names. At least, the reader who maintains your code can ask a domain expert what it means.
+
+### Add Meaningful Context
+Enclose names in well-named classes, functions, or enums.
+```
+firstName, lastName, street, houseNumber, city, state, zipcode
+...
+if (state == "")    // Was the state part of an address I'm dealing with?
+...
+```
+Better:
+```
+addrFirstName, addrLastName, addrStreet, addrHouseNumber, addrCity, addrState, addrZipcode
+...
+if (addrState == "")    // Cool, the state is part of an address I'm dealing with!
+...
+```
+Consider creating `Address` class to provide more context.
+
+### Don't Add Gratuitous Context
+In an imaginary application called *Gas Station Deluxe*, it is a bad idea to prefix every class with GSD. You type `G` and IDE shows a mile-long list of class names, why make it so hard for the IDE to help you?
+Add no more context to a name than is necessary.
