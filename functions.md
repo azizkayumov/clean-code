@@ -20,4 +20,30 @@ Mixing different levels of abstraction is always confusing. Once the different l
 ### Reading Code from Top to Bottom: The Stepdown Rule
 We want to be able to read the program as though it were a set of **TO** paragraphs, each of which is describing the current level of abstraction and referencing subsequent TO paragraphs
 at the next level down:
-> To include the setups and teardowns, we include setups, then we include the test page content, and then include the teardowns.
+> To include the setups and teardowns, we include setups, then we include the test page content, and then include the teardowns.    
+
+Writing functions that stay at a single level of abstraction is the key to keeping functions short and making sure they do one thing. Making the code read like a top-down set of TO paragraphs is an effective technique for keeping the abstraction level consistent.
+
+### Switch Statements
+Switch statements naturally do N things. Unfortunately, it is hard to avoid switch statements, but it is possible to bury them in a low-level class and is never repeated (with polymorphism). 
+```
+public Money calculatePay(Employee e){
+    switch(e.type){
+        case COMMISSIONED:
+            return calculateCommisionedPay(e);
+        case HOURLY:
+            return calculateHourlyPay(e);
+        case SALARIED:
+            return calculateSalariedPay(e);
+    }
+}
+```
+There are several problems with this function:
+1. It is large, it will grow when new employees are added.
+2. It clearly does more than one thing.
+3. It violates SRP(Single Responsibility Principle), there is more than one reason for it to change.
+4. It violates OCP(Open Closed Principle), it must change whenever new types are added.
+5. There are an unlimited number of other functions that will have the same structure. For ex. `isPayday(Employee e, Date date)`, `deliverPay(Employee e, Money pay)`.
+
+The solution is to bury the `switch` statement in the basement of abstract factory, and nevel let anyone see it. The factory will use the switch statement to create instances of the derivates of Employee, and the variatious functions, such as `calculatePay`, `isPayday`, and `deliverPay`, will be dispatched polymorphically through the Employee interface.
+The generale rule for switch statement is that they can be tolerated if they appear only once, are used to create polymorphic objects, and are hidden behind an inheritance relationship so that the rest of the system can't see it.
