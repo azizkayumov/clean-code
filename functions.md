@@ -47,3 +47,20 @@ There are several problems with this function:
 
 The solution is to bury the `switch` statement in the basement of abstract factory, and nevel let anyone see it. The factory will use the switch statement to create instances of the derivates of Employee, and the variatious functions, such as `calculatePay`, `isPayday`, and `deliverPay`, will be dispatched polymorphically through the Employee interface.
 The generale rule for switch statement is that they can be tolerated if they appear only once, are used to create polymorphic objects, and are hidden behind an inheritance relationship so that the rest of the system can't see it.
+
+### Use Descriptive Names
+You know you are workign on clean code when each routine turns out to be pretty much what you expected. Half the battle to achieving that principle is choosing good names for small functions that do one thing. The smaller and more focused a function is, the easier it is to choose a descriptive name.    
+A long descriptive name is better than a short enigmatic name. A long descriptive name is better than a long descriptive comment.    
+Try several different names and read the code with each in place.    
+Be consistent in your names, use the same phrases, nouns and verbs in the function names you choose for your modules: `includeSetupAndTeardownPages`, `includeSetupPages`, `includeSuiteSetupPage`, `includeSetupPage`.
+
+### Function Arguments
+The ideal number of arguments for a function is zero! Next one, followed by two. Three or more should be avoided and needs special justification.    
+Arguments are even harder from a testing point of view. Imagine the difficulty of writing all the test cases to ensure that all the various combinations of arguments work properly.    
+Output arguments are harder to understand than input arguments. We don't usually expect information to be going out through the arguments. So output arguments often cause us to do a double-take.
+
+### Common Monadic Forms
+It is very common to pass a single argument into a function. Avoid monadic functions that transforms its argument (confusing af), in fact, it is better to return the transformed argument as an output value. 
+
+### Flag Arguments
+They're Ugly! Passing a boolean into a function is a truly terrible practice -> it says the function does more than one thing! `render(true)` is just a plain confusing to a poor reader, seeing the function description `render(boolean isSuite)` helps a little, we should have split the function into two: `renderForSuite()` and `renderForSingleTest()`.
