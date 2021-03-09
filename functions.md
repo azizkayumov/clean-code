@@ -64,3 +64,9 @@ It is very common to pass a single argument into a function. Avoid monadic funct
 
 ### Flag Arguments
 They're Ugly! Passing a boolean into a function is a truly terrible practice -> it says the function does more than one thing! `render(true)` is just a plain confusing to a poor reader, seeing the function description `render(boolean isSuite)` helps a little, we should have split the function into two: `renderForSuite()` and `renderForSingleTest()`.
+
+
+### Dyadic Functions
+A function with two args is harder to understand than the monadic functions: `writeField(name)` or `writeField(outputStream, name)`. The second requires a short pause until we learn to ignore the first parameter.     
+*If two arguments are ordered components of a single value*, then this dyadic function is appropriate: `Point p = new Point(0,0);`. 
+Dyadic functions are not evil, but come with a cost, try to convert them to monadic forms.
