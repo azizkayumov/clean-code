@@ -70,3 +70,21 @@ They're Ugly! Passing a boolean into a function is a truly terrible practice -> 
 A function with two args is harder to understand than the monadic functions: `writeField(name)` or `writeField(outputStream, name)`. The second requires a short pause until we learn to ignore the first parameter.     
 *If two arguments are ordered components of a single value*, then this dyadic function is appropriate: `Point p = new Point(0,0);`. 
 Dyadic functions are not evil, but come with a cost, try to convert them to monadic forms.
+
+### Triads
+Functions that take 3 arguments are significantly harder to understand than dyads. The issues of ordering, pausing, and ignoring some arguments are more than doubled. How many times should you read the function `assertEquals(message, expected, actual)` to ignore `message`?
+
+### Argument Objects
+When a function seems to need more than 2-3 arguments, it is likely that some of those arguments can be wrapped into a class of their own:
+```
+Circle makeCircle(double x, double y, double radius)
+Circle makeCircle(Point center, double radius)
+```
+
+### Argument Lists
+Consider the function:
+```
+String.format("%s worked %.2f hours.", name, hours);
+```
+If the variable arguments are all treated identically, then they're equaivalent to a single argument of `List`. Functions that take variable arguments can be monads, dyads, or even triads, but it would be a mistake to give more than that.
+
