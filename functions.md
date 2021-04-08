@@ -88,3 +88,6 @@ String.format("%s worked %.2f hours.", name, hours);
 ```
 If the variable arguments are all treated identically, then they're equaivalent to a single argument of `List`. Functions that take variable arguments can be monads, dyads, or even triads, but it would be a mistake to give more than that.
 
+### Verbs and Keywords
+Functions with one argument should form a very nice verb + noun pair: `write(name)` or `writeField(name)`. 
+We can also encode the argument names into the function name: `assertExpectedEqualsActual(expected, actual)` is better than `assert(expected, actual)`. 
