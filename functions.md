@@ -91,3 +91,27 @@ If the variable arguments are all treated identically, then they're equaivalent 
 ### Verbs and Keywords
 Functions with one argument should form a very nice verb + noun pair: `write(name)` or `writeField(name)`. 
 We can also encode the argument names into the function name: `assertExpectedEqualsActual(expected, actual)` is better than `assert(expected, actual)`. 
+
+### Have no side effects
+Functions should do only one thing! Sometimes, it modifies the input, sometimes it changes its own class params which results in damaging mistruths. 
+Consider this function which matches a `username` and `password`. It returns `true` if they match, `false` otherwise:
+```
+public class UserValidator{
+    private Cryptographer cryptographer;
+    public boolean checkPassword(String username, String password){
+        User user = UserGateway.findByName(username);
+        if (user != null){
+            String codedPhrase = user.getPhraseEncodedByPassword();
+            String phrase = cryptographer.decrypt(codedPhrase, password);
+            if ("Valid Password".equals(phrase)){
+                Session.initialize();
+                return true
+            }
+        }
+        return false;
+    }
+}
+```
+The side effect is the call to `Session.initialize()`! The function name says it is supposed to check password, not initialize the session. So, a caller who believes what the name of the function says runs the risk of erasing the existing session data.
+
+The side effect also creates a temporal coupling: the function can be called only it is safe to initialize the session. In this case, we should rename the function to `checkPasswordAndInitializeSession`, though it certainly violates **Do one thing**.
