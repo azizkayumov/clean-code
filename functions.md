@@ -205,3 +205,9 @@ public enum Error{
 }
 ```
 Classes like this are *dependency magnet*, many other classes must import and use them. When `Error.java` changes, all those other classes must change and redeployed. When you use exceptions rather than error codes, then new exceptions are `derivatives` of the exception class. They can be added without forcing them to be changed and redeployed.
+
+### Don't Repeat Yourself
+Duplication may be the root of of all evil in software. Consider how OOP serves to concentrate code into base classes that would otherwise be redundant. Aspect Oriented Programming, Component Oriented Programming, are all, in part, strategies for **eliminating duplication**.
+
+### Structured Programming
+Dijkstra said that every function, and every block within a function, should have one entry and one exit. Following these rules means that there should only be one `return` statement in a function, no `break` or `continue` in a loop, and never, ever, any `goto` statements. Such rules provide significant benefit in larger functions, if your functions are small, then occasional multiple `return`, `breka` or `continue` statements do no harm and can sometimes even be more expressive than single entry, single exit rule. On the contrary, `goto` only makes sense in large functions.
