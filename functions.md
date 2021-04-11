@@ -123,9 +123,13 @@ In general, output arguments should be avoided. **If your function must change t
 ### Command Query Separation
 **Functions should either do something or answer something, but not both!** Either your function should change the state of an object, or it should return some information about that object. Doing both often leads to confusion.
 Consider this function:
-`public boolean set(String attribute, String value);`
+```
+public boolean set(String attribute, String value);
+```
 This function sets the value of a nameed attribute and return `true` if it is successful and `false` if no such attribute exists. This leads to confusing statements like this:
-`if (set("username","unclebob"))...`
+```
+if (set("username","unclebob"))...
+```
 Now imagine the statement from the point of a reader: is it asking whether "username" attribute was previously set to "unclebob"? 
 or is it asking whether the "username" attribute was succesfully set to "unclebob"? It is not clear whether the word `set` is a verb or an adjective.
 The author intended `set` to be a verb, but in the context of the `if` statement if *feels* like an adjective.
@@ -136,3 +140,68 @@ if (attributeExists("username")){
     setAttribute("username", "unclebob");
 }
 ```
+
+### Prefer Exceptions to Returning Error Codes
+Returning error codes from command functions is a subtle violation of command query separation. It promotes commands being used as expression in `if` statements:
+```
+if (deletePage(page) == E_OK)..
+```
+This leads to deeply nested structures. When you return an error code, you create the problem that the caller must deal with the error immediately:
+```
+if (deletePage(page) == E_OK){
+    if (registry.deleteReference(page.name) == E_OK){
+        ...
+    }
+}
+
+```
+On the other hand, if you use exceptions instead of returned error codes, then error processing code can be separated from the happy code:
+```
+try{
+    deletePage(page);
+    registry.deleteReference(page.name);
+    configKeys(page.name.makeKey());
+}catch(Exception e){
+    logger.log(e.getMessage());
+}
+```
+
+### Extract Try/Catch Blocks
+Try/Catch blocks are ugly on their own: it is better to extract the bodies of the `try` and `catch` block out into functions of their own:
+```
+public void delete(Page page){
+    try{
+        deletePageAndAllReferences(page);
+    }catch(Exception e){
+        logError(e);
+    }
+}
+
+private void deletePageAndAllReferences(Page page){
+    deletePage(page);
+    registry.deleteReference(page.name);
+    configKeys.deleteKey(page.name.makeKey());
+}
+
+private void logError(Exception e){
+    logger.log(e.getMessage());
+}
+```
+So the `delete` function is all about error processing, `deletePageAndAllReferences` function is all about the processes of fully deleting a `page`.
+
+### Error Handling is One Thing
+Functions should do one thing, error handling is one thing. Thus, a function that handles errors should do nothing else. This implies that if the keyword `try` exists in a function, it should be the very first thing word in the function and that there should be nothing after the `try/catch/finally` blocks.
+
+### The Error.java Dependency Magnet
+Returning error codes indicates that there is some class or enum in which all error codes are defined:
+```
+public enum Error{
+    OK,
+    INVALID,
+    NO_SUCH,
+    LOCKED,
+    OUT_OF_RESOURCES,
+    WAITING_FOR_EVENT
+}
+```
+Classes like this are *dependency magnet*, many other classes must import and use them. When `Error.java` changes, all those other classes must change and redeployed. When you use exceptions rather than error codes, then new exceptions are `derivatives` of the exception class. They can be added without forcing them to be changed and redeployed.
