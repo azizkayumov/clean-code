@@ -115,3 +115,24 @@ public class UserValidator{
 The side effect is the call to `Session.initialize()`! The function name says it is supposed to check password, not initialize the session. So, a caller who believes what the name of the function says runs the risk of erasing the existing session data.
 
 The side effect also creates a temporal coupling: the function can be called only it is safe to initialize the session. In this case, we should rename the function to `checkPasswordAndInitializeSession`, though it certainly violates **Do one thing**.
+
+### Output Arguments
+Arguments are the inputs of a function, but if the function changes the state of the input, it creates confusion. Does `appendFooter(s)` append s as the footer to something? Or does it append some footer to s? This ambiguity forces the caller to look at the function declaration: **anything that forces you to check the function signature is equaivalent to a double-take**. It would better to have `report.appendFooter(s)`.
+In general, output arguments should be avoided. **If your function must change the state of something, have it change the state of its owning object.**
+
+### Command Query Separation
+**Functions should either do something or answer something, but not both!** Either your function should change the state of an object, or it should return some information about that object. Doing both often leads to confusion.
+Consider this function:
+`public boolean set(String attribute, String value);`
+This function sets the value of a nameed attribute and return `true` if it is successful and `false` if no such attribute exists. This leads to confusing statements like this:
+`if (set("username","unclebob"))...`
+Now imagine the statement from the point of a reader: is it asking whether "username" attribute was previously set to "unclebob"? 
+or is it asking whether the "username" attribute was succesfully set to "unclebob"? It is not clear whether the word `set` is a verb or an adjective.
+The author intended `set` to be a verb, but in the context of the `if` statement if *feels* like an adjective.
+
+The real solution is to separate the command from the query so that the ambuguity cannot occur:
+```
+if (attributeExists("username")){
+    setAttribute("username", "unclebob");
+}
+```
