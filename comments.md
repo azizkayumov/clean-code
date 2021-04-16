@@ -10,7 +10,7 @@ Comments are pure **lies**. Code evolves, but programmers hardly maintain commen
 
 ### Comments Do Not Make Up for Bad Code
 A motivation to write comments is **bad code**. 
-> Ooh, I'd better comment that!
+> Ooh, I'd better comment that!    
 > No, you'd better clean it!
 
 ### Explain Yourself in Code
