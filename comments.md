@@ -27,12 +27,14 @@ if (employee.isEligibleForFullBenefits())
 It takes only seconds to create a function that says the same thing as the comment.
 
 ### Good comments
+
 1. Legal comments
 ```
 // Copyright (C) 2003, 2004, 2005 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the GNU General Public License version 2 or later.
 ```
-2. Informative comments
+
+2. Informative comments    
 Comments that are expressable in code are not informative comments:
 ```
 // Returns an instance of the Responder being tested
@@ -43,7 +45,8 @@ In this case, the intention is clearer:
 // format matched kk:mm:ss EEE, MMM dd, yyyy
 Pattern timeMatcher = Pattern.compile("\\d*:\\d*:\\d* \\w*, \\w* \\d*, \\d*")
 ```
-3. Explanation of Intent
+
+3. Explanation of Intent    
 Sometimes a comment can provide the intent behind a decision:
 ```
 // This is our best attempt to get a race condition
@@ -54,13 +57,15 @@ for (int i = 0; i < 25000; i++){
     thread.start();
 }
 ```
-4. Clarification
+
+4. Clarification    
 It is helpful to translate some obscure code into something more readable:
 ```
 assertTrue(a.compareTo(b) != 0); // a != b
 ```
 Note that there is a risk of writing incorrect clarification
-5. Warning of Consequences
+
+5. Warning of Consequences    
 ```
 public static SimpleDateFormat makeStandardHttpDateFormat(){
     // SimpleDateFormat is not thread safe,
@@ -70,7 +75,8 @@ public static SimpleDateFormat makeStandardHttpDateFormat(){
     return df
 }
 ```
-6. TODO comments
+
+6. TODO comments    
 It is reasonable to leave TODO comments:
 ```
 // TODO Mdm these are not needed
@@ -80,7 +86,8 @@ protected VersionInfo makeVersion() throws Exception{
 }
 ```
 TODOs are jobs that should be done later, clearly they're not an excuse to leave bad code. 
-7. Amplification
+
+7. Amplification    
 A comment to explain the importance of something that may otherwise seem inconsequential:
 ```
 String username = editText.getText().trim();
@@ -88,12 +95,14 @@ String username = editText.getText().trim();
 // whitespaces that could cause the username to be
 // recognized as another username.
 ```
-8. Javadocs in Public APIs
+
+8. Javadocs in Public APIs    
 
 
 ### Bad Comments
 Most comments are bad comments. They are excuses for poor code or justifications for insufficient decisions.
-1. Mumbling
+
+1. Mumbling    
 Commenting just because you should or because the process requires it - a hack. Dedicate some time to leave a good comment or do not comment at all.
 ```
 try{
@@ -105,7 +114,8 @@ try{
 ```
 What was the intention of the comment above?
 Any comment that forces to look at other modules has failed to communicate to you and is not worth the bits it consumes.
-2. Redundant Comments
+
+2. Redundant Comments    
 Here is the comment that takes more time to read than the code itself:
 ```
 // Utility method that returns when this.closed is true. Throws an exception
@@ -136,7 +146,8 @@ protected ArrayList listeners = new ArrayList();
 */
 protected Log logger = null;
 ```
-3. Misleading Comments
+
+3. Misleading Comments    
 ```
 // Utility method that returns when this.closed is true. Throws an exception
 // if the timeout is reached
@@ -149,7 +160,8 @@ public void waitForClose(final long milliseconds) throws Exception{
 }
 ```
 This subtle bit of misinformation could cause another programmer to call this function in the expectation that it will return as soon as `this.closed` becomes true. That poor programmer would then find himself debugging the function why his code executed so slowly.
-4. Mandated Comments
+
+4. Mandated Comments    
 It is silly to have a rule that every function must have a javadoc, or every variable must have a comment. These comments lead to confusion, lies and disorganization.
 ```
 /**
@@ -167,7 +179,8 @@ public void addCD(String title, String author, int tracks, int durationInMinutes
     cdList.add(cd);
 }
 ```
-5. Journal Comments
+
+5. Journal Comments    
 Comments that keep every change that has ever been made to the code are not necessary anymore since we have source code control systems that do exactly the same:
 ```
 11-Oct-2020 : Reorganized the class and moved it to new package
@@ -175,7 +188,8 @@ Comments that keep every change that has ever been made to the code are not nece
 12-Nov-2020 : Fixed bug in SpreadsheetDate class
 ....
 ```
-6. Noise Comments
+
+6. Noise Comments    
 Comments that restate the obvious and provide no new information:
 ```
 /**
@@ -199,7 +213,7 @@ public int getDayOfMonth(){
 These comments are so noisy that we learn to ignore them. They will eventually become *lies* as the code around them changes.
 **Replace the temptation to create noise with the determination to clean your code - you will become a better and happier programmer.**
 
-7. Don't use a comment when you can use a function or variable
+7. Don't use a comment when you can use a function or variable    
 Consider this code:
 ```
 // does the module from the global list depend on the
@@ -212,12 +226,13 @@ ArrayList moduleDependees = smodule.getDependSubsystems();
 String ourSubsystem = subSysMod.getSubSystem();
 if (moduleDependees.contains(ourSubsystem))
 ```
-8. Position markers
+
+8. Position markers    
 If you overuse banners, they will fall into the background noise and be ignored:
 ```
 /// Actions //////////////////////////////////
 ```
-9. Closing Brace Comments
+9. Closing Brace Comments    
 Closing brace comment may make sense with deeply nested structures, it serves only to clutter the kind of small and encapsulated functions:
 ```
 try{
@@ -227,12 +242,14 @@ try{
     } // while
 }// try
 ```
-10. Attributions and Bylines
+
+10. Attributions and Bylines    
 ```
 /* Added by Rick */ 
 ```
 Source code systems are very good at remembering who added what, when.
-11. Commented-Out Code
+
+11. Commented-Out Code    
 ```
 InputStreamResponse response = new InputStreamResponse();
 response.setBody(formatter.getResultStream());
@@ -242,7 +259,8 @@ response.setBody(formatter.getResultStream());
 ```
 Why are these 3 lines of code commented? Are they still important? Are the reminders of something?
 We have good source code control systems. Don't comment-out code. Just delete it.
-12. HTML Comments
+
+12. HTML Comments    
 HTML in source code comments is an abomination. It makes the code hard to read in the place where they should be easy to read - the IDE. If they're meant to be read by some Javadocs tool, it should be the responsility of that damn tool, not the programmer.
 ```
 /**
@@ -255,7 +273,8 @@ HTML in source code comments is an abomination. It makes the code hard to read i
 * </p>
 */
 ```
-13. Nonlocal Information
+
+13. Nonlocal Information    
 Write comment if it describes the code it appears near. Do not comment more than expected:
 ```
 /**
@@ -267,7 +286,8 @@ public void setFitnessePort(int fitnessePort){
     this.fitnessePort = fitnessePort;
 }
 ```
-14. Too much information
+
+14. Too much information    
 Do not bring interesting historical discussions:
 ```
 /*
@@ -279,7 +299,8 @@ Do not bring interesting historical discussions:
 * ..
 */
 ```
-15. Inobvious Connection
+
+15. Inobvious Connection    
 The connection between a comment and the code should be obvious. 
 ```
 /*
@@ -289,7 +310,9 @@ The connection between a comment and the code should be obvious.
 this.pngBytes = new byte[((this.width + 1) * this.height * 3) + 200];
 ```
 It is a pity when a comment needs its own explanation.
-16. Function Headers
+
+16. Function Headers    
 Short functions do not need much description. Choose a well-suited name instead of investing time for a comment header.
-17. Javadocs in Nonpublic Code
+
+17. Javadocs in Nonpublic Code    
 Generating javadoc pages for the classes and functions inside a system is not generally useful, and the extra formality of the  javadoc comments amounts to distraction.
