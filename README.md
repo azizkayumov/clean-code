@@ -6,3 +6,4 @@ Contents:
 2. [Meaningful Names](https://github.com/azizkayumov/clean-code/blob/main/meaningful-names.md)
 3. [Functions](https://github.com/azizkayumov/clean-code/blob/main/functions.md)
 4. [Comments](https://github.com/azizkayumov/clean-code/blob/main/comments.md)
+5. [Formatting](https://github.com/azizkayumov/clean-code/blob/main/formatting.md)
