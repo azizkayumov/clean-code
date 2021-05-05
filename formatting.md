@@ -163,3 +163,29 @@ public class WikiPageResponder implements SecureResponder{
     }
 }
 ```
+#### Conceptual Affinity
+Certain bits of code *want* to be near other bits. They have a certain conceptual affinity, the stronger the affinity, the less vertical distance there should be between them. The affinity might be based on a direct dependence, such as one function calling another or a function using a variable. Affinity might be based on a group of functions perform a similar operation:
+```
+public class Assert{
+    static public void assertTrue(String message, boolean condition){
+        ...
+    }
+    
+    statuc public void assertFalse(String message, boolean condition){
+        ...
+    }
+}
+```
+
+#### Vertical Ordering
+As in newspaper articles, we expect the most important concepts to come first, and we expect them to be expressed with the least amount of polluting detail. We expect the low-level details to come last:
+```
+Caller (high level)
+  |
+  V
+Caller (mid level)
+  |
+  V
+Callee (low level)
+```
+This allows the readers to skim source files without having to immerse themselves in the details.
