@@ -57,3 +57,109 @@ public class BoldWidget extends ParentWidget{
     }
 }
 ```
+
+### Vertical Density
+Vertical openness should separate concepts, and vertical density should imply close accociation.
+Lines of code that are tightly related should appear vertically dense.
+Look at these useless comments:
+```
+public class ReporterConfig{
+    /*
+     * The class name of the reporter listener
+     */
+     private String m_className;
+     /*
+      * The properties of the reporter listener
+      */
+     private List<Property> m_properties = new ArrayList<Property>();
+     
+     public void addProperty(Property property){
+        m_properties.add(property);
+     }
+}
+```
+It forces you to use much more eye and head motion to understand the code. Compare with this one:
+```
+public class ReporterConfig{
+     private String m_className;
+     private List<Property> m_properties = new ArrayList<Property>();
+     
+     public void addProperty(Property property){
+        m_properties.add(property);
+     }
+}
+```
+### Vertical Distance
+Have you ever chased your tail through a class, hopping from one function to the next, scrolling up and down the source code, trying to divine how the functions relate and operate, only to get lost in a rat's nest of confision? This is frustrating, you're trying to understand what the system does, but you're spending your time and mental energy on trying to locate and remember where the pieces are.     
+
+Concepts that are closely related should be kept vertically close to each other. This rule does not work for concepts that belong to separate files, but then closely related concepts should not be separated into different files unless you have a very good reason.    
+
+#### Variable Declarations
+Variables should be declared as close as to their usage as possible:
+```
+public int countTestCases(){
+    int count = 0;
+    for (Test test : tests)
+        count += test.countTestCases();
+    return count;
+}
+```
+
+#### Instance variables
+On the contrary, **instance variables** should be declared at the top of the class. This should not increase the vertical distance of these variables, because in a well-designed class, they are used by many, if not all, of the methods of the class.     
+
+Consider this code from JUnit 4.3.1: 
+```
+public class TestSuite implements Test{
+    static public Test createTask(Class<? extends TestCase> theClass, String name){
+        ...
+    }
+    
+    public static Constructor<? extends TestCase> getTestConstructor(Class<? extends TestCase> theClass) throws NoSuchMethodException{
+        ...
+    }
+    
+    public static String exceptionToString(Throwable t){
+        ...
+    }
+    
+    private String fName; // WTF
+    
+    private Vector<Test> fTests = new Vector<Test>(10); // WTF
+    
+    public TestSuite(){
+        ...
+    }
+}
+```
+
+#### Dependent Functions
+If one function calls another, they should be vertically close, and the caller should be above the callee, if at all possible. This gives the program a natural flow. If the convention is followed reliably, readers will be able to trust that function definitions will follow shortly after their use:
+```
+public class WikiPageResponder implements SecureResponder{
+    public Response makeResponse(FitnesseContext context, Request request) throws Exception{
+        String pageName = getPageNameOrDefault(request, "FrontPage");
+        loadPage(pageName, context);
+        if(page == null)
+            return notFoundResponse(context, request);
+        else
+            return makePageResponse(context);
+    }
+    
+    private String getPageNameOrDefault(Request request, String defaultPageName){
+        ...
+    }
+    
+    protected void loadPage(String resource, FitnesseContext context){
+        ...
+    }
+    
+    private Response notFoundRespone(FitnesseContext context, Request request){
+        ...
+    }
+    
+    private SimpleResponse makePageResponse(FitnesseContext context){
+        ...
+    }
+}
+```
