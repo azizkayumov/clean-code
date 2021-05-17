@@ -189,3 +189,54 @@ Caller (mid level)
 Callee (low level)
 ```
 This allows the readers to skim source files without having to immerse themselves in the details.
+
+### Horizontal Formatting
+It is better if we don't have to scroll right to see more code in one line. 120 characters or less would be ideal.
+
+#### Horizontal Openness and Density
+Put spaces around the assignment operators to make them easier to read:
+```
+private static double determinant(double a, double b, double c){
+    return b*b - 4*a*c;
+}
+```
+#### Horizontal Alignment
+Alignment of a list of variables is not useful, you're tempted to look at the wrong variable type, so the alignment hides the true intent:
+```
+public class FitnesseExpeditor{
+    private Socket              socket;
+    private InputStream         input;
+    private OutputStrem         output;
+    private Request             request;
+    private Response            response;
+    private FitnesseContext     context;
+    protected long              requestParsingTimeLimit;
+}
+```
+If the problem is the length of the list of variables, then there is higher chance that the class should be split up.
+
+#### Indentation
+A source code is a hierarchy rather like an outline. To make this hierarchy of scopes visible, we indent the lines of source code in proportion to their position in the hierarchy. Statements at the level of the file, such as most class declarations, are not indented at all. Methods within a class are indented one level to the right of the class. Implementations of those methods are implemented one level to the right of the method declaration and so on. 
+```
+public class FitnesseServer implements SocketServer{
+    private FitnesseContext context;
+    
+    public FitnesseServer(FitnesseContext context){
+        this.context = context;
+    }
+    
+    public void serve(Socket s){
+        serve(s, 10000);
+    }
+}
+```
+Without indentation, source codes are almost not readable by humans:
+```
+public class FitnesseServer implements SocketServer{ private FitnesseContext context; public FitnesseServer(FitnesseContext context){ this.context = context;}
+public void serve(Socket s){ serve(s, 10000);}}
+```
+Sometimes it feels ok to break the indentation rule for short `if`, `while` or short functions. However, you will always come back and put indentations next time you're reading the source code, so prefer to always indent lines.
+
+### Team Rules
+Every programmer has his own formatting rules, but when he works in a team, the team should sit and agree upon a single formatting style. We want the software to have a consistent style. We don't want it to appear to have been written by a bunch of disagreeing individuals.     
+A good software is composed of a set of documents that read nicely. They need to have a consistent and smooth style.
