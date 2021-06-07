@@ -8,3 +8,4 @@ Contents:
 4. [Comments](https://github.com/azizkayumov/clean-code/blob/main/comments.md)
 5. [Formatting](https://github.com/azizkayumov/clean-code/blob/main/formatting.md)
 6. [Objects and Data Structures](https://github.com/azizkayumov/clean-code/blob/main/object_and_data_structures.md)
+7. [Error Handling](https://github.com/azizkayumov/clean-code/blob/main/error_handling.md)
