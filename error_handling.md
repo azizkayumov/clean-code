@@ -49,3 +49,41 @@ private DeviceHandle getHandle(DeviceID id){
 ...
 ```
 Notice how cleaner it is. This is not about a matter of aesthetics, the code is better because two concerns were tangled: the logic for device shutdown and error handling, are now separated!
+
+### Write Your *Try-Catch-Finally* Statement First
+First, try to write tests that force exceptions, and then add behavior to your handler to satisfy your tests. This will cause you to build the transaction scope of the **try** block first and will help you maintain the transaction nature of the scope.
+```
+@Test(expected = StorageException.class)
+public void retrieveSectionShouldThrowOnInvalidFileName(){
+    sectionStore.retrieveSection("invalid - file");
+}
+```
+Create a dummy stub:
+```
+public List<RecordedGrip> retrieveSection(String sectionName){
+    return new ArrayList<RecordedGrip>();
+}
+```
+Next, force to throw the expected exception:
+```
+public List<RecordedGrip> retrieveSection(String sectionName){
+    try{
+        FileInputStream stream = new FileInputStream(sectionName);
+    }catch(Exception e){
+        throw new StorageException("retrieval error", e);
+    }
+    return new ArrayList<RecordedGrip>();
+}
+```
+Finally, add the real implementation and narrow down the scope of caught exceptions:
+```
+public List<RecordedGrip> retrieveSection(String sectionName){
+    try{
+        FileInputStream stream = new FileInputStream(sectionName);
+        stream.close();
+    }catch(FileNotFoundException e){
+        throw new StorageException("retrieval error", e);
+    }
+    return new ArrayList<RecordedGrip>();
+}
+```
