@@ -87,3 +87,61 @@ public List<RecordedGrip> retrieveSection(String sectionName){
     return new ArrayList<RecordedGrip>();
 }
 ```
+
+### Use Unchecked Exceptions
+Checked exceptions are checked at compile time (e.g. `FileNotFoundException`, `IOException`). Once a function signature throws a checked exception, it forces the function callers to change their implementations. This behavior is a violation of Open/Closed principle: low level functions are forcing high level functions to catch the mess. Use unchecked exceptions (e.g. `RuntimeException`,`Error`) instead.
+
+### Provide Context with Exceptions
+Create informative error messages and pass themm along with your exceptions. Mentiona the operation that failed and the type of a failure.
+
+### Define Exception Classes in Terms of a Caller's Needs
+Provide exception classes in terms of the way they're caught. Look at the poor implementation:
+```
+ACMEPort port = new ACMEPort(12);
+try{
+    port.open();
+}catch(DeviceResponseException e){
+    reportPortError(e);
+    logger.log("Device response exception", e);
+}catch(ATM1212UnlockedException e){
+    reportPortError(e);
+    logger.log("Unlock exception", e);
+}catch(GMXError e){
+    reportPortError(e);
+    logger.log("GMX exception", e);
+}
+...
+```
+It covers all the cases. While it is reasonable to log all cases according to exception types, it is still practical to avoid duplication and wrap them in a common exception:
+```
+LocalPort port = new LocalPort(12);
+try{
+    port.open();
+}catch(PortDeviceFailure e){
+    reportPortError(e);
+    logger.log(e.getMessage(), e);
+}
+...
+```
+The `LocalPort` class is a wrapper class to the `ACMEPort` library class. Wrapper like this can be very useful, it minimizes your dependency on the library, and you can move to a different library without much penalty:
+```
+public class LocalPort{
+    private ACMEPort innerPort;
+    public LocalPort(int portNumber){
+        innerPort = new ACMEPort(portNumber);
+    }
+    
+    public void open(){
+        try{
+            port.open();
+        }catch(DeviceResponseException e){
+            throw new PortDeviceFailure(e);
+        }catch(ATM1212UnlockedException e){
+            throw new PortDeviceFailure(e);
+        }catch(GMXError e){
+            throw new PortDeviceFailure(e);
+        }
+        throw new PortDeviceFailure(e);
+    }
+}
+```
