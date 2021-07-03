@@ -145,3 +145,60 @@ public class LocalPort{
     }
 }
 ```
+### Special Case Pattern
+Consider this awkward code that sums expenses in a billing application:
+```
+try{
+    MealExpenses expenses = expenseReportDAO.getMeals(employee.getId());
+    m_total += expenses.getTotal();
+}catch(MealExpensesNotFound e){
+    m_total += getMealPerDiem();
+}
+```
+The exception clutters the logic, it would be great to have simpler code like this:
+```
+MealExpenses expenses = expenseReportDAO.getMeals(employee.getId());
+m_total += expenses.getTotal();
+```
+We can change the `ExpenseReportDAO` so that it always returns `MealExpense` object, if there are no meal expenses, it returns a `MealExpense` object that returns the `per diem` as its total:
+```
+public class PerDiemMealExpenses implements MealExpenses{
+    public int getTotal(){
+        // return the per diem default
+    }
+}
+```
+This is called SPECIAL CASE PATTERN, you create a special class or configure an object so that it handles a special case for you, hence, the client code does not have to deal with exceptional behavior.
+
+### Don't return `null`
+All it takes is one missing `null` check to send an application spinning out of control. By returning `null`, we're essentially creating work for ourselves and foisting problems upon our callers. Consider this code:
+```
+public void registerItem(Item item){
+    if(item != null){
+        ItemRegistry registry = persistentStore.getItemRegistry();
+        if(registry != null){
+            Item existing = registry.getItem(item.getId());
+            if(existing.getBillingPeriod().hasRetailOwner()){
+                existing.register(item);
+            }
+        }
+    }
+}
+```
+Did you notice the fact that there wasn't a `null` check in the second line of that nested `if` statement. What would have happened of `persistentStore` were null? It would create `NullPointerException` at runtime, and either someone is catching `NullPointerException` at the top level or not. Either was it's bad!     
+It is easy to say the code above is missing `NPE` check, but in actuality, it has many other problems.       
+
+If you tempted to return `null` from a method, consider throwing an exception or returning a SPECIAL CASE object instead. If you are calling a `null`-returning method from a third-party API, consider wrapping it with a method that either throws an exception or returns a special case object. In many cases, special case objects are an easy remedy. Imagine that you have code like this:
+```
+List<Employee> employees = getEmployees();
+if(employees != null){
+    for(Employee e: employees)
+        totalPay += e.getPay();
+}
+```
+Does `getEmployees()` have to return `null`? If we change the method to return an empty list, we can clean up the code:
+```
+List<Employee> employees = getEmployees();
+for(Employee e: employees)
+totalPay += e.getPay();
+```
