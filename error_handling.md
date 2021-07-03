@@ -170,7 +170,7 @@ public class PerDiemMealExpenses implements MealExpenses{
 ```
 This is called SPECIAL CASE PATTERN, you create a special class or configure an object so that it handles a special case for you, hence, the client code does not have to deal with exceptional behavior.
 
-### Don't return `null`
+### Don't Return `null`
 All it takes is one missing `null` check to send an application spinning out of control. By returning `null`, we're essentially creating work for ourselves and foisting problems upon our callers. Consider this code:
 ```
 public void registerItem(Item item){
@@ -202,3 +202,27 @@ List<Employee> employees = getEmployees();
 for(Employee e: employees)
 totalPay += e.getPay();
 ```
+### Don't Pass `null`
+Return `null` is bad, passing `null` is worse! Unless you're workign with an API which expects you to pass `null`, you should avoid passing `null` whenever possible. Consider this simple method:
+```
+public double xProjection(Point p1, Point p2){
+    return (p2.x - p1.x) * 1.5;
+}
+```
+What happens when someone passes `null` as an argument? We'll get `NullPointerException`. How can we fix this? We could create an exception and throw it:
+```
+public double xProjection(Point p1, Point p2){
+    if(p1 == null || p2 == null)
+        return InvalidArgumentException("InvalidArgument for MetricsCalculator.xProjection");
+    return (p2.x - p1.x) * 1.5;
+}
+```
+It might be better than `NullPointerException` since it is specific to the type of error. There is another alternative:
+```
+public double xProjection(Point p1, Point p2){
+    assert p1 != null : "p1 should not be null";
+    assert p2 != null : "p2 should not be null";
+    return (p2.x - p1.x) * 1.5;
+}
+```
+It's good documentation, but it still doesn't solve the problem. In most prog. languages, there's no way to deal with a `null` that is passed by a caller accidentally. Because this is the case, the rational approach is to forbid passing `null` by default and end up with fewer careless mistakes. 
