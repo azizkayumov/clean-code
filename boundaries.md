@@ -47,4 +47,59 @@ Learning the third-party code is hard, integrating it is hard too. Doing both at
 We essentially create controlled tests that check our understanding of that API. The test focus on what we want out of the API.
 
 ### Learning `log4j`
-
+Let's say we want to use `log4j` for logging purpose. We download it and write the first test case expecting it to "hello" tp the console without reading much documentation:
+```
+@Test
+public void tesLogCreate(){
+    Logger logger = Logger.getLogger("MyLogger");
+    logger.info("hellow");
+}
+```
+When we run the test, the logger produces an error saying us we need something called `Appender`. After a little more reading, we find that there is a `ConsoleAppender`:
+```
+@Test
+public void tesLogCreate(){
+    Logger logger = Logger.getLogger("MyLogger");
+    ConsoleAppender appender = new ConsoleAppender();
+    logger.addAppender(appender);
+    logger.info("hellow");
+}
+```
+This time we find that `Appender` has no output stream:
+```
+@Test
+public void tesLogCreate(){
+    Logger logger = Logger.getLogger("MyLogger");
+    logger.removeAllAppenders();
+    ConsoleAppender appender = new ConsoleAppender(new PatternLayout("%p %t %m%n"), ConsoleAppender.SYSTEM_OUT);
+    logger.addAppender(appender);
+    logger.info("hellow);
+}
+```
+Finally, we see that a log message with "hello" came out on the console.
+A bit more googling, reading and testing, we end up with this:
+```
+public class LogTest{
+    private Logger logger;
+    
+    @Before
+    public void initialize(){
+        logger = Logger.getLogger("logger");
+        logger.removeAllAppenders();
+        Logger.getRootLogger().removeAllAppenders();
+    }
+    
+    @Test
+    public void basicLogger(){
+        BasicConfiguratior.configurate();
+        logger.info("basicLogger");
+    }
+    
+    @Test
+    public void addAppenderWithStream(){
+        ConsoleAppender appender = new ConsoleAppender(new PatternLayout("%p %t %m%n"), ConsoleAppender.SYSTEM_OUT);
+        logger.addAppender(appender);
+        logger.info("addAppenderWithStream");
+    }
+}
+```
