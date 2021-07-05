@@ -38,4 +38,13 @@ public class Sensor{
 No user of `Sensors` would care one bit if generics were used or not. That choice has become (and always should be) an implementation detail.      
 The interface at the boundary(`Map`) is hidden. It is able to evolve with very little impact on the rest of the application. The use of generics is no longer a big issue because the casting and type management are handled inside the `Sensors` class. It results in code that is **easier to read and harder to misuse.**. The `Sensors` class can enforce design and business rules.     
 
-It is advised to not pass `Map`(or any interface at a boundary), avoid returning ut from or accepting it as an argument to, Public APIs. Keep it inside the class or close family of classes, where it is used.
+It is advised to not pass `Map`(or any interface at a boundary), avoid returning it from or accepting it as an argument to, Public APIs. Keep it inside the class or close family of classes, where it is used.
+
+### Exploring and Learning Boundaries
+It's not our job to test the third-party code, but it may be our best interest to write tests for the third-party code we use.
+Long hours of reading the documentation might be spent to decide how to use the third-party code. Then we might be able to use it and see whether it does what we think. We would not be surprised to find ourselves bogged down in long debugging sessions trying to figure out whether the bugs we're experincing are in our code or theirs.     
+Learning the third-party code is hard, integrating it is hard too. Doing both at the same time is doubly hard. Instead of experimenting and trying out the new stuff in our production code, we could write some test to explore our understanding of the third-party code. Such test are called *learning tests* (Jim Newkirk).
+We essentially create controlled tests that check our understanding of that API. The test focus on what we want out of the API.
+
+### Learning `log4j`
+
