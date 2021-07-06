@@ -103,3 +103,22 @@ public class LogTest{
     }
 }
 ```
+Learning tests:
+- increase our knowledge about the third-party code in an easy and isolated way
+- positive return on time investment: when new releases of the third-party code comes, we can just run the tests to see if there are behavioral changes.
+- verify that the third-party code works the way we expect them to.
+
+### Using Code That Does Not Yet Exist
+There is another kind of boundary, one that separates the known from the unknown. Sometimes what us on the other side of the boundary is unknowable at least for now. In this case, it is recommended to create a boundary that represents the future API the way we want them.     
+As an example, a radio communications system has two teams working on `Transmitter` and `Communication` components. The `Communication` team is dependant on the `Transmitter` API for send radio signals on the provided frequency, but the transmission APIs are not yet defined. The `Communication` team can create a boundary interface `Transmitter` and focus on developing their own communication APIs using fake transmitters:
+```
+CommunicationController -> Transmitter <- TransmitterAdapter -> TransmitterAPI(future)
+                                ^
+                          FakeTransmitter
+```
+Using `FakeTransmitter`, the team can test `CommunicationController`. Once the transmitter API is defined, `TransmitterAdapter` will be used bridge the gap.
+
+### Clean Boundaries
+Good software designs accomodate change without huge investments and rework. When we use code that is out of our control, special care must be taken to protect our intestment and make sure future change is not too costly.     
+Code at the boundaries needs clear separation and test that define expectations. **It is better to depend on something you control than on something you don't control, let it end up controlling you.**     
+We manage third-party boundaries by having very few places in the code that refer to them. We may wrap them as we did with `Map`, or use `Adapter`s to convert from our expected interface to the provided interface. Either way our code speaks to us better, promotes internally consistent usage across the boundary and has fewer maintenance points when the third-party code changes. 
