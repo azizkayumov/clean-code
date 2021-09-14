@@ -12,6 +12,8 @@ You may not write more of a unit test than is sufficient to fail, and not compil
 
 **Third Law**      
 You may not write more of production code that is sufficient to pass the currently failing test.
+Readability makes tests clean. Readability in tests is more important than in production code. 
+31
 
 
 The tests and the production code are written *together*, with the tests just a few seconds ahead of the production code. If we work this way, we will write dozens of tests every day, hundreds of tests every month and thousands every year. If we work this way, these tests will cover virtually all of our production code. However, the test code which can rival the production code in size, can present a management problem.
@@ -26,3 +28,35 @@ If you don't keep your tests clean, you will lose them. And without them, you lo
 
 The higher your test coverage, the less you fear. Indeed, you can improve that architecture and design without fear. Having an automated suite of unit tests that cover the production code is the key to keeping your design and architecture as clean as possible. Tests enable all the -ilities, because tests enable *change*. 
 
+### Clean Tests
+Readability in tests is more important that it is in production code. What makes tests clean? The same things that makes all code readable: clarity, simplicity and density of expression. In tests, you want to say a lot with as few expressions as possible. Consider these 3 tests that are difficult to understand and can certainly be improved: there is a terrible amount of duplicate code `addPage` and `assertSubString` and more importantly, this code is just loaded with details that interfere with the expressiveness of the test.
+```
+public void testGetPageHierarchiAsXml() throws Exception{
+    crawler.addPage(root, PathParser.parse("PageOne"));
+    crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
+    crawler.addPage(root, PathParser.parse("PageTwo"));
+    
+    request.setResource("root");
+    request.addInput("type","pages");
+    Responder responder = new SerializedPageResponder();
+    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitnesseContext(root), request);
+    String xml = response.getContent();
+    
+    assertEquals("test/xml", response.getContentType());
+    assertSubString("<name>PageOne</name>", xml);
+    assertSubString("<name>PageTwo</name>", xml);
+    assertSubString("<name>ChildOne</name>", xml);
+}
+```
+For ex., `PathParser` calls transform strings into `PagePath` instances used by the crawlers. This transformation is completely irrelevant to the test at hand and serves only to obfuscate the intent. The details surrounding the creation of the `responder` and the gathering and casting of the `response` are also just noise. Then there's the ham-handed way that the request URL is built from `resource` and an argument. In the end, this code was not designed to be read. Now consider the improved test:
+```
+public void testGetPageHierarchyAsXml() throws Exception {
+    makePages("PageOne", "PageOne.ChildOne", "PageTwo");
+    
+    submitRequest("root", "type:pages");
+    
+    asserResponseIsXml();
+    assertResponseContains("<name>PageOne</name>", "<name>PageTwo</name>", "<name>ChildOne</name>");
+}
+```
+The BUILD-OPERATE-CHECK pattern is clearly visible by the structure of these tests. Each of these is clearly split into three parts: building the test data, operate on that test data and checking that the operation yielded the expected results. 
