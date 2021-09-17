@@ -114,7 +114,30 @@ public String getState() {
 }
 ```
 `StringBuffer`s are a bit ugly. You should avoid if the cost is very small. However, in test environment, is not likely to be contstrained at all.     
-
-
 There are things that you might never do in a production environment that are perfectly fine in a test environment. Usually, they invole issues of memory or CPU efficiency. But they never involve issues of cleanliness.
 
+### One Assert per Test
+This requirement may seem draconian, but the advantage is tests that are quick and easy to understand. We can break multiple assert tests into separate tests, each with its own particular assertion:
+```
+@Test
+public void testGetPageHierarchyAsXML() throws Exception{
+    givenPages("PageOne", "PageOne.ChildOne", "PageTwo");
+    
+    whenRequestIsIssued("root", "type:pages");
+    
+    thenResponseShouldBeXML();
+}
+
+@Test
+public void testGetPageHierarchyHasRightTags() throws Exception{
+    givenPages("PageOne", "PageOne.ChildOne", "PageTwo");
+    
+    whenRequestIsIssued("root", "type:pages");
+    
+    thenResponseShouldContain(
+        "<name>PageOne</name>", "<name>PageOne.ChildOne</name>", "<name>PageTwo</name>"
+    );
+}
+```
+Use the common **given-when-then** convention, this makes the test easier to read. Unfortunately, splitting tests as shown results in a lot of duplicate code. 
+We can eliminate the duplication by using the **TEMPLATE METHOD** pattern and putting the *given/when* parts in the base class, and the *then* parts in different derivates. Overall, the single assert rule is a good guideline or at least, the number of asserts in a test should be minimized.
