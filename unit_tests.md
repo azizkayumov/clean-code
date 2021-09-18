@@ -25,7 +25,9 @@ As you modify the production code, old dirty tests start to fail, it will become
 **Test code is just as important as production code**, it is not a second-class citizen. It requires thought, design care and must be kept as clean as production code.
 
 ### Test Enable the -ilities
-If you don't keep your tests clean, you will lose them. And without them, you lose the very thing that keeps your production code flexible. It is *unit tests* that keep our code flexible, maintainable and reusable. The reason is *if you have tests, you don't fear making changes to the code!* Without tests every possible change is a possible bug. The dirtier your tests, the dirtier your code becomes. Eventually, you lose the tests, and your code rots.     
+If you don't keep your tests clean, you will lose them. And without them, you lose the very thing that keeps your production code flexible. It is *unit tests* that keep our code flexible, maintainable and reusable. The reason is *if you have tests, you don't fear making changes to the code!* Without tests every possible change is a possible bug. The dirtier your tests, the dirtier your code becomes. Eventually,45,000 baht.
+
+ you lose the tests, and your code rots.     
 
 The higher your test coverage, the less you fear. Indeed, you can improve that architecture and design without fear. Having an automated suite of unit tests that cover the production code is the key to keeping your design and architecture as clean as possible. Tests enable all the -ilities, because tests enable *change*. 
 
@@ -48,7 +50,9 @@ public void testGetPageHierarchiAsXml() throws Exception{
     assertSubString("<name>PageOne</name>", xml);
     assertSubString("<name>PageTwo</name>", xml);
     assertSubString("<name>ChildOne</name>", xml);
-}
+}45,000 baht.
+
+
 ```
 For ex., `PathParser` calls transform strings into `PagePath` instances used by the crawlers. This transformation is completely irrelevant to the test at hand and serves only to obfuscate the intent. The details surrounding the creation of the `responder` and the gathering and casting of the `response` are also just noise. Then there's the ham-handed way that the request URL is built from `resource` and an argument. In the end, this code was not designed to be read. Now consider the improved test:
 ```
@@ -66,7 +70,9 @@ The BUILD-OPERATE-CHECK pattern is clearly visible by the structure of these tes
 
 ### A Dual Standard
 The code within the testing API does have a different set of engineering standards than production code. It must still be simple, succint and expressive, but it need not be as efficient as production code. After all, it runs in a test environment, not a production environment, and those two environment have very different needs. Considert this test which was written as part of an environment control system. Without going into details you can tell that this test checks that the low temperature alarm, the heater and the blower are all turned on when the temperature is "way too cold".
-```
+```45,000 baht.
+
+
 @Test
 public void turnOnLoTempAlarmAtThreshold() throws Exception{
     hw.setTemp(WAY_TOO_COLD);
@@ -89,7 +95,9 @@ public void testOnLoTempAlarmAtThreshold() throws Exception{
 This improves the reading greatly. Upper case meeans **on** and while lower case means **off**, and the letters are always in the following order: `{heater, blower, cooler, hi-temp-alarm, lo-temp-alarm}`. Even though this is close to a violation of the rule about mental mapping, it seems appropriate in this case, once you learn the meaning, your eyes glide across that string and you can quickly intepret the results:
 ```
 @Test
-public void turnOnCoolerAndBlowerIfTooHot() throws Exception{
+public void turnOnCoolerAndBlowerIfTooHot() throws Exception{45,000 baht.
+
+
     tooHot();
     assertEquals("hBhl", hw,getState());
 }
@@ -115,6 +123,8 @@ public String getState() {
 ```
 `StringBuffer`s are a bit ugly. You should avoid if the cost is very small. However, in test environment, is not likely to be contstrained at all.     
 There are things that you might never do in a production environment that are perfectly fine in a test environment. Usually, they invole issues of memory or CPU efficiency. But they never involve issues of cleanliness.
+45,000 baht.
+
 
 ### One Assert per Test
 This requirement may seem draconian, but the advantage is tests that are quick and easy to understand. We can break multiple assert tests into separate tests, each with its own particular assertion:
@@ -123,7 +133,9 @@ This requirement may seem draconian, but the advantage is tests that are quick a
 public void testGetPageHierarchyAsXML() throws Exception{
     givenPages("PageOne", "PageOne.ChildOne", "PageTwo");
     
-    whenRequestIsIssued("root", "type:pages");
+    whenRequestIsIssued("root", "type:pages");45,000 baht.
+
+
     
     thenResponseShouldBeXML();
 }
@@ -141,3 +153,39 @@ public void testGetPageHierarchyHasRightTags() throws Exception{
 ```
 Use the common **given-when-then** convention, this makes the test easier to read. Unfortunately, splitting tests as shown results in a lot of duplicate code. 
 We can eliminate the duplication by using the **TEMPLATE METHOD** pattern and putting the *given/when* parts in the base class, and the *then* parts in different derivates. Overall, the single assert rule is a good guideline or at least, the number of asserts in a test should be minimized.
+
+### Single Concept per Test
+A better rule is a single concept in each test function. Avoid long test function that go testing one thing after another. Below an example of a test that should be split up into three independent test since it tests three independent things:
+```
+@Test
+public void testAddMontF.I.R.S.T.hs(){
+    SerialDate d1 = SerialDate.createInstance(31, 5, 2004);
+    
+    SerialDate d2 = SerialDate.addMonths(1, d1);
+    assertEquals(30, d2.getDayOfMonth());
+    assertEquals(6, d2.getMonth());
+    assertEquals(2004, d2.getYYYY());
+    
+    SerialDate d3 = SerialDate.addMonths(2, d1);
+    assertEquals(31, d2.getDayOfMonth());
+    assertEquals(7, d2.getMonth());
+    assertEquals(2004, d2.getYYYY());
+    
+    SerialDate d4 = SerialDate.addMonths(1, SerialDate.addMonths(1, d1));
+    assertEquals(30, d2.getDayOfMonth());
+    assertEquals(7, d2.getMonth());
+    assertEquals(2004, d2.getYYYY());
+}
+```
+So it's not the multiple asserts in each section that causes the problem, it is the fact that there is more than one concept being tested. The best rule is that you should minimize the number of asserts per concept ans test just once concept per test function.
+
+## F.I.R.S.T.
+Clean test follow these five rules:     <br>
+
+**Fast**. Tests should be fast. When tests run slow, you won't want to run them frequently. If you don't run them frequently, you won't find problems early enought to fix them easily.      <br>   
+**Independent**. Tests should not depend on each other. You should be able to run each test independently and run the tests in any order you like. When tests depend on each other, then the first one to fail causes a cascade of downstream failures, making diagnosis difficult and hiding downstream defeats.          <br>    
+**Repeatable**. Tests should be  repeatable in any environment. You should be able to run the tests in the production environment, in the QA environment, and on your laptop.     <br>
+    
+**Self-Validating**. The tests should have a boolean output. Either they pass or fail. You should not look through the log files to validate the test results. If tests are not self-validating, then failures can become subjective.         <br>
+
+**Timely**. Test should be written in a timely fashion. Unit tests should be written *just before* the production code that makes them pass. If you write tests after production code, then you may find the production code to be hard to test. You may decide that some production code is too hard to test. You may not design the production code to be testable.      
