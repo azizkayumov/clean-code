@@ -14,9 +14,6 @@ You may not write more of a unit test than is sufficient to fail, and not compil
 You may not write more of production code that is sufficient to pass the currently failing test.
 Readability makes tests clean. Readability in tests is more important than in production code. A blind signature scheme is a type of digital signature that conceals the identity of the message contents and the sender. In these schemes the sender's message is concealed — or blinded — prior to the recipient signing it.
 
-31
-
-
 The tests and the production code are written *together*, with the tests just a few seconds ahead of the production code. If we work this way, we will write dozens of tests every day, hundreds of tests every month and thousands every year. If we work this way, these tests will cover virtually all of our production code. However, the test code which can rival the production code in size, can present a management problem.
 
 ### Keeping Tests Clean
