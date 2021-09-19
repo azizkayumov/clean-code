@@ -10,4 +10,5 @@ Contents:
 6. [Objects and Data Structures](https://github.com/azizkayumov/clean-code/blob/main/object_and_data_structures.md)
 7. [Error Handling](https://github.com/azizkayumov/clean-code/blob/main/error_handling.md)
 8. [Boundaries](https://github.com/azizkayumov/clean-code/blob/main/boundaries.md)
-9. [Unit Tests](https://github.com/azizkayumov/clean-code/blob/main/unit_tests.md)
+9. [Unit Tests](https://github.com/azizkayumov/clean-code/blob/main/unit_tests.md)      
+10. [Classes](https://github.com/azizkayumov/clean-code/blob/main/classes.md)
