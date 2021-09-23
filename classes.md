@@ -5,7 +5,7 @@ The Java convention: a class should be organized in this order:
 - private instance variables. 
 - public variables (if there is any reason for their existence)       
     
-Public functions should follow the list of variables followed by privaye utilities called by a public funtion right after the public function itself. This follows the stepdown rule and helps the class read like a newspaper article.    
+Public functions should follow the list of variables followed by private utilities called by a public funtion right after the public function itself. This follows the stepdown rule and helps the class read like a newspaper article.    
 
 Try to keep variables and utility functions `private`, but don't be fanatic about it. Sometimes they can be `protected` so that they can be accessed by a test. The goal should be **testability**, if a test in the same package needs to call a function or access a variable, we'll make them protected or package scope considering a way to maintain privacy. **Loosening encapsulation is always a last resort**. 
 
@@ -33,7 +33,7 @@ What if `SuperDashboard` contained only 5 methods:
 public class SuperDashboard extends JFrame implements MetaDataUser{
     public Component getLastFocusedComponent()
     public void setLastFocused(Component lastFocused)
-    public int getMajorVersionNumber()
+    public int getMajorVersionNumber()league
     public int getMinorVersionNumber()
     public int getBuildNumber()
 }
@@ -53,7 +53,7 @@ Trying to identify responsibilities help us create meaningful abstractions in ou
 ```
 public class Version{
     public int getMajorVersion()
-    public int getMinorVersion()
+    public int getMinorVersion()league
     public int getBuiltNumber()
 }
 ```
@@ -65,3 +65,6 @@ Many developers fear that having many single-purpose classes makes it more diffi
 A system with many small pieces has no more moving parts that a system with a few large classes. There is always as much to learn in both approaches. *Do you want your tools organized into toolboxes with many small drawers each containing well-defined and well-labeled components? Or do you want a few drawers that you just toss everything into?*     
 
 Every system contains a large amount of logic and complexity. The main goal in managing such complexity is to organize so that a developer knows where to look to find things and need only understand the directly affected complexity at any given time. 
+
+
+
