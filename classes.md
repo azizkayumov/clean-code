@@ -20,7 +20,7 @@ public class SuperDashboard extends JFrame implements MetaDataUser{
     public boolean getOpenSourceState()s
     ...
     public String getUserHome()
-    public String getBaseDir()https://mail.google.com/mail/u/0/#inbox
+    public String getBaseDir()
     ...
     public void processMenuItems()
     public void processTabPages()
@@ -41,11 +41,13 @@ public class SuperDashboard extends JFrame implements MetaDataUser{
 Despite its small number of methods, `SuperDashboard` has too many *responsibilities*.      
 
 The name of a class should describe what responsibilities it fulfills. Naming is probably the first way of helping determine class size. The more ambigious the class name, the more likely it has too many responsibilities. `Supesr`, `Manager` or `Processor` often hint at unfortunate aggregation of responsibilities.      
-https://mail.google.com/mail/u/0/#inbox
+
 We should also be able to describe a class in about 25 words, without "if", "and", "or" or "but". The smaller version of `SuperDashboard` provides access to the last focused component **and** it also allows us to track the version and build numbers. The first "and" is a hint that `SuperDashboard` has too many responsibilities.
 
 ### The Single Responsibility Principle (SRP)
-The Single Responsibility Principle states that a class or module should have one, and only one, reason to change. This principle gives us both a definition of responsibility. Classes should have one responsibility - one reason to change.      
+The Single Responsibility Principle states that a class or module shoulOur restructed code now supports SRP. It also supports another key OO principle known as the Open-Closed Principle: **classes should be open for extension but closed for modification**. We can simple drop our `UpdateSql` class while keeping other classes closed for modification. We want to structure our systems so that we introduce changes as little as possible when we update them with new features.
+156
+d have one, and only one, reason to change. This principle gives us both a definition of responsibility. Classes should have one responsibility - one reason to change.      
 
 The small `SuperDashboard` class has two reasons to change: first, it tracks version information that should be updated on every time the software gets shipped and second, it manages Java Swing components. We might change the version information based on changes to other code in the system.     
 
@@ -59,7 +61,7 @@ public class Version{
 ```
 SRP is one of the most important concept in OO design, yet it is the most abused class design principle.     
 Getting softare to work and making software clean are two very different activities. The problem is that we think we're done once the program works and failt to switch to the other concern of organization and cleanliness. We moves on to the next problem rather than going back and breaking the overstuffed classes into decoupled unit with single responsilibities.       
-https://mail.google.com/mail/u/0/#inbox
+
 Many developers fear that having many single-purpose classes makes it more difficult to understand the bigger picture. Their concern is they must navigate from class to class in order to figure out how a piece of work gets accomplished.       
 
 A system with many small pieces has no more moving parts that a system with a few large classes. There is always as much to learn in both approaches. *Do you want your tools organized into toolboxes with many small drawers each containing well-defined and well-labeled components? Or do you want a few drawers that you just toss everything into?*     
@@ -103,7 +105,7 @@ We should try to organize classes so as to reduce the risk of change. This `Sql`
 ```
 public class Sql{
     public Sql(String table, Column[] columns)
-    public String create()https://mail.google.com/mail/u/0/#inbox
+    public String create()
     public String insert(Object[] fields)
     public String selectAll()
     public String findByKey(String keyColumn, String keyValue)
@@ -125,7 +127,7 @@ abstract public class Sql{
     abstract public String generate();
 }
 
-public class CreateSql extends Sql{https://mail.google.com/mail/u/0/#inbox
+public class CreateSql extends Sql{
     public CreateSql(String table, Column[] columns)
     @Override public String generate()
 }
@@ -198,10 +200,3 @@ public class PortfolioTest{
 ```
 If a system is decoupled enough to be tested in this way, it will also be more flexible and promote more reuse. It means the elements of our system are better isolated from each other and from change, hence making it easier to understand each element of the system.       
 By minimizing coupling this way, our classes also supports another class design principle known as the **Dependency Inversion Principle (DIP)**. DIP says **classes should depend upon abstractions, not on concrete details**.
-
-
-
-
-
-
-
