@@ -40,7 +40,7 @@ public class SuperDashboard extends JFrame implements MetaDataUser{
 ```
 Despite its small number of methods, `SuperDashboard` has too many *responsibilities*.      
 
-The name of a class should describe what responsibilities it fulfills. Naming is probably the first way of helping determine class size. The more ambigious the class name, the more likely it has too many responsibilities. `Supesr`, `Manager` or `Processor` often hint at unfortunate aggregation of responsibilities.      
+The name of a class should describe what responsibilities it fulfills. Naming is probably the first way of helping determine class size. The more ambigious the class name, the more likely it has too many responsibilities. `Super`, `Manager` or `Processor` often hint at unfortunate aggregation of responsibilities.      
 
 We should also be able to describe a class in about 25 words, without "if", "and", "or" or "but". The smaller version of `SuperDashboard` provides access to the last focused component **and** it also allows us to track the version and build numbers. The first "and" is a hint that `SuperDashboard` has too many responsibilities.
 
