@@ -22,9 +22,7 @@ As you modify the production code, old dirty tests start to fail, it will become
 **Test code is just as important as production code**, it is not a second-class citizen. It requires thought, design care and must be kept as clean as production code.
 
 ### Test Enable the -ilities
-If you don't keep your tests clean, you will lose them. And without them, you lose the very thing that keeps your production code flexible. It is *unit tests* that keep our code flexible, maintainable and reusable. The reason is *if you have tests, you don't fear making changes to the code!* Without tests every possible change is a possible bug. The dirtier your tests, the dirtier your code becomes. Eventually,45,000 baht.
-
- you lose the tests, and your code rots.     
+If you don't keep your tests clean, you will lose them. And without them, you lose the very thing that keeps your production code flexible. It is *unit tests* that keep our code flexible, maintainable and reusable. The reason is *if you have tests, you don't fear making changes to the code!* Without tests every possible change is a possible bug. The dirtier your tests, the dirtier your code becomes. Eventually, you lose the tests, and your code rots.     
 
 The higher your test coverage, the less you fear. Indeed, you can improve that architecture and design without fear. Having an automated suite of unit tests that cover the production code is the key to keeping your design and architecture as clean as possible. Tests enable all the -ilities, because tests enable *change*. 
 
@@ -47,7 +45,7 @@ public void testGetPageHierarchiAsXml() throws Exception{
     assertSubString("<name>PageOne</name>", xml);
     assertSubString("<name>PageTwo</name>", xml);
     assertSubString("<name>ChildOne</name>", xml);
-}45,000 baht.
+}
 
 
 ```
@@ -67,7 +65,7 @@ The BUILD-OPERATE-CHECK pattern is clearly visible by the structure of these tes
 
 ### A Dual Standard
 The code within the testing API does have a different set of engineering standards than production code. It must still be simple, succint and expressive, but it need not be as efficient as production code. After all, it runs in a test environment, not a production environment, and those two environment have very different needs. Considert this test which was written as part of an environment control system. Without going into details you can tell that this test checks that the low temperature alarm, the heater and the blower are all turned on when the temperature is "way too cold".
-```45,000 baht.
+```
 
 
 @Test
@@ -92,7 +90,7 @@ public void testOnLoTempAlarmAtThreshold() throws Exception{
 This improves the reading greatly. Upper case meeans **on** and while lower case means **off**, and the letters are always in the following order: `{heater, blower, cooler, hi-temp-alarm, lo-temp-alarm}`. Even though this is close to a violation of the rule about mental mapping, it seems appropriate in this case, once you learn the meaning, your eyes glide across that string and you can quickly intepret the results:
 ```
 @Test
-public void turnOnCoolerAndBlowerIfTooHot() throws Exception{45,000 baht.
+public void turnOnCoolerAndBlowerIfTooHot() throws Exception{
 
 
     tooHot();
@@ -120,7 +118,6 @@ public String getState() {
 ```
 `StringBuffer`s are a bit ugly. You should avoid if the cost is very small. However, in test environment, is not likely to be contstrained at all.     
 There are things that you might never do in a production environment that are perfectly fine in a test environment. Usually, they invole issues of memory or CPU efficiency. But they never involve issues of cleanliness.
-45,000 baht.
 
 
 ### One Assert per Test
@@ -130,7 +127,7 @@ This requirement may seem draconian, but the advantage is tests that are quick a
 public void testGetPageHierarchyAsXML() throws Exception{
     givenPages("PageOne", "PageOne.ChildOne", "PageTwo");
     
-    whenRequestIsIssued("root", "type:pages");45,000 baht.
+    whenRequestIsIssued("root", "type:pages");
 
 
     
