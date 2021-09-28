@@ -30,5 +30,18 @@ One occurrence of lazy initialization is not a serious problem, however, there a
 
 One way to separate contruction from use is simply to move all aspects of contruction to `main`, or modules called by `main`, and to design the rest of the system assuming that all objects have been constructed and wired up appropriately. The direction of dependency arrows crossing the barrier between `main` and the application all go one direction, pointing away from `main`. This means that the application has no knowledge of `main` or of the contruction process. 
 
+### Factories
 
+Sometimes, we need to make the application responsible for *when* an object gets created. Consider this example of order processing system. The applications must create the `LineItem` instances to add to an `Order`. We can use ABSTRACT FACTORY pattern to give the application control of *when* to build `LineItem`s, but keep the details of that contruction separate from the application code:
+```
+main() -------------------------> OrderProcessing()------
+  |                                 |                   |
+  |                                 |                   |
+  v                                 v                   |
+LineItemFactoryImpl() -----> LineItemFactory()          |
+         \                                              |
+          \                                             v
+           `---------------------------------------> LineItem()
+```
+Notice all the dependencies point from `main` toward the `OrderProcessing` application, the application is decoupled from the details of how to build `LineItem`. That is implemented in `LineItemFactoryImpl`, yet `main` is in complete control of when the `LineItem` instances get built and can even provide app specific contructor arguments. 
 
