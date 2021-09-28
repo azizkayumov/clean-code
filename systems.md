@@ -26,11 +26,20 @@ public Service getService(){
 ```
 This is the LAZY INITIALIZATION idiom that we don't incur the overhead of contruction unless we actually use the object, and our startup times can be faster as a result.        
 However, we now have a hard-coded dependency on `MyServiceImpl` and everything its contructor requires. Testing can be a problem, if `MyServiceImpl` is a heavyweight object, we will need to make sure that an appropriate mock object gets assigned to the `service` field before this method is called during unit testing. Because we hava two responsibilities: contruction and normal runtime processing => which means the method is breaking the *Single Responsibility Principle* in a small way.       
-One occurrence of lazy initialization is not a serious problem, however, there are normally many instances of little setup idioms like this in applications. We should never let the little, convenient idioms lead to modularity breakdown. The startup process should be modularized separately from the normal runtime logic and we should make sure that we have a global, consistent strategy for resolving our major dependencies.        
+One occurrence of lazy initialization is not a serious problem, however, there are normally many instances of little setup idioms like this in applications. We should never let the little, convenient idioms lead to modularity breakdown. The startup process should be modularized separately from the normal runtime logic and we should make sure that we have a global, consistent strategy for resolving our major dependencies.  
 
-One way to separate contruction from use is simply to move all aspects of contruction to `main`, or modules called by `main`, and to design the rest of the system assuming that all objects have been constructed and wired up appropriately. The direction of dependency arrows crossing the barrier between `main` and the application all go one direction, pointing away from `main`. This means that the application has no knowledge of `main` or of the contruction process. 
+**Separation of Main**
 
-### Factories
+One way to separate contruction from use is simply to move all aspects of contruction to `main`, or modules called by `main`, and to design the rest of the system assuming that all objects have been constructed and wired up appropriately. The direction of dependency arrows crossing the barrier between `main` and the application all go one direction, pointing away from `main`. This means that the application has no knowledge of `main` or of the contruction process:
+```
+main() ---------------------> application()
+  |                                 |
+  |                                 |
+  v                                 v
+Builder() ------------------> co: ConfiguredObject()
+```
+
+**Factories**
 
 Sometimes, we need to make the application responsible for *when* an object gets created. Consider this example of order processing system. The applications must create the `LineItem` instances to add to an `Order`. We can use ABSTRACT FACTORY pattern to give the application control of *when* to build `LineItem`s, but keep the details of that contruction separate from the application code:
 ```
